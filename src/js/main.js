@@ -1,25 +1,22 @@
+import $ from 'jquery'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import Swal from 'sweetalert2'
 
 function aplicarAnimacion(id, anim) {
-	const el = document.getElementById(id)
-	el.classList.remove('animate__animated', 'animate__' + anim)
-	void el.offsetWidth
-	el.classList.add('animate__animated', 'animate__' + anim)
+	const el = $('#' + id)
+	el.removeClass('animate__animated animate__' + anim)
+	void el[0].offsetWidth
+	el.addClass('animate__animated animate__' + anim)
 
-	el.addEventListener(
-		'animationend',
-		() => {
-			Swal.fire('Animación aplicada: ' + anim).then(() => {
-				el.classList.remove('animate__animated', 'animate__' + anim)
-			})
-		},
-		{ once: true }
-	)
+	el.one('animationend', function () {
+		Swal.fire('Animación aplicada: ' + anim).then(() => {
+			el.removeClass('animate__animated animate__' + anim)
+		})
+	})
 }
 
-document.querySelectorAll('img').forEach((img) => {
-	const anim = img.id.replace('anim-', '')
-	img.addEventListener('click', () => aplicarAnimacion(img.id, anim))
+$('img').each(function () {
+	const anim = this.id.replace('anim-', '')
+	$(this).on('click', () => aplicarAnimacion(this.id, anim))
 })
